@@ -29,6 +29,9 @@ pool.connect((err, client, release) => {
   console.log('Connected to PostgreSQL database');
   release(); // Release the client back to the pool
 });
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
 
 // Route to fetch students' data
 app.get('/students', async (req, res) => {
