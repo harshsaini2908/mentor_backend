@@ -32,13 +32,14 @@ pool.connect((err, client, release) => {
   release(); // Release the client back to the pool
 });
 app.get('/', async(req, res) => {
-  res.send('Hello, world!');
+  // res.send('Hello, world!');
   try {
     // Query to fetch students from the database
     const query = 'SELECT * FROM students WHERE mentor_id IS NULL';
 
     const { rows } = await pool.query(query);
     res.json(rows); // Send the fetched data as JSON response
+    res.status(200);
   } catch (error) {
     console.error('Error fetching students:', error);
     res.status(500).json({ error: 'Internal Server Error' }); // Send error response
