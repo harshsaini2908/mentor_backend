@@ -11,8 +11,10 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(bodyParser.json());
+console.log(process.env);
 
 // const { Pool } = require('pg');
+// console.log(env);
 const connectionString = process.env.API_KEY;
 console.log(connectionString);
 const pool = new Pool({
@@ -54,9 +56,11 @@ app.put('/students/:id/add-mentor/:mentorId', async (req, res) => {
     // console.log("welcome");
     const { id, mentorId } = req.params;
     try {
+
       const query = 'UPDATE students SET mentor_id = $1 WHERE student_id = $2';
       await pool.query(query, [mentorId, id]);
       res.sendStatus(200); // Send success status if update is successful
+      res.send('Hello, world!');
     } catch (error) {
       console.error('Error adding mentor ID to student:', error);
       res.status(500).json({ error: 'Internal Server Error' }); // Send error response
