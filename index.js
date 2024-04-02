@@ -11,7 +11,7 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(bodyParser.json());
-console.log(process.env);
+// console.log(process.env);
 
 // const { Pool } = require('pg');
 // console.log(env);
@@ -31,8 +31,18 @@ pool.connect((err, client, release) => {
   console.log('Connected to PostgreSQL database');
   release(); // Release the client back to the pool
 });
-app.get('/', (req, res) => {
+app.get('/', async(req, res) => {
   res.send('Hello, world!');
+  try {
+    // Query to fetch students from the database
+    const query = 'SELECT * FROM students WHERE mentor_id IS NULL';
+
+    const { rows } = await pool.query(query);
+    res.json(rows); // Send the fetched data as JSON response
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ error: 'Internal Server Error' }); // Send error response
+  }
 });
 
 // Route to fetch students' data
