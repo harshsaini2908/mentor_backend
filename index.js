@@ -31,17 +31,32 @@ pool.connect((err, client, release) => {
   console.log('Connected to PostgreSQL database');
   release(); // Release the client back to the pool
 });
-app.get('/', async(req, res) => {
-  // res.send('Hello, world!');
-  pool.connect((err, client, release) => {
-    if (err) {
-      return console.error('Error acquiring client', err.stack);
-    }
-    console.log('Connected to PostgreSQL database');
-    release(); // Release the client back to the pool
-  });
+// app.get('/', async(req, res) => {
+//   // res.send('Hello, world!');
+//   pool.connect((err, client, release) => {
+//     if (err) {
+//       return console.error('Error acquiring client', err.stack);
+//     }
+//     console.log('Connected to PostgreSQL database');
+//     release(); // Release the client back to the pool
+//   });
  
+// });
+
+app.get('/', async (req, res) => {
+  try {
+    // Attempt to connect to the database
+    await pool.connect();
+    console.log('Connected to PostgreSQL database');
+    
+    // Send a response back to the client
+    res.send('Connected to PostgreSQL database');
+  } catch (error) {
+    console.error('Error connecting to PostgreSQL database:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
+
 
 // Route to fetch students' data
 app.get('/students', async (req, res) => {
